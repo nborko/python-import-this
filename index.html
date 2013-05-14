@@ -455,7 +455,18 @@ fib(2000)</code></pre>
       <section>
         <h2>Python is Object Oriented</h2>
         <h3>What do classes look like?</h3>
-        A classic example:
+        <p>A point on a cartesian graph can be represented as a tuple, <code>(x, y)</code></p>
+        <p>A point module may have the following function (among others):</p>
+        <pre><code>def distance_from_origin(point):
+    """Calculate the distance from the origin (0, 0) to the point""
+    x, y = point
+    return ((x ** 2) + (y ** 2)) ** 0.5</code></pre>
+      </section>
+
+      <section>
+        <h2>Python is Object Oriented</h2>
+        <h3>What do classes look like?</h3>
+        As a class:
         <pre><code>class Point(object):
     """Point class for tracking points on a 2d graph."""
 
@@ -464,6 +475,7 @@ fib(2000)</code></pre>
         Constructor arguments:
         x: The x coordinate of the point (default: 0)
         y: The y coordinate of the point (default: 0)
+
         """
         self._x = x
         self._y = y
