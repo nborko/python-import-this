@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>import this: Write Better Python with Style and Grace</title>
+
+  <meta name="description" content="Presentation for Alamo City Python Meeting">
+  <meta name="author" content="Nicholas Borko">
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <link rel="stylesheet" href="css/reveal.min.css">
+  <link rel="stylesheet" href="css/theme/moon.css" id="theme">
+
+  <!-- For syntax highlighting -->
+  <link rel="stylesheet" href="lib/css/zenburn.css">
+
+  <style type="text/css">
+li { padding-top: 0.5ex !important; }
+
+.footer {
+  position: fixed;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  font-size: 22px !important;
+  line-height: 1.1 !important;
+}
+  </style>
+
+  <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+  <script>
+  document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+  </script>
+
+  <!--[if lt IE 9]>
+  <script src="lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+
+  <div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+
+      <section>
+        <h1 style="text-transform:none!important;">import this</h1>
+        <h2>Write Better Python<br>With Style and Grace</h2>
+        <p>Nick Borko<br>
+          Chief Technology Officer<br>
+          Leaning Forward Technologies, LLC</p>
+        <p>May 14, 2013</p>
+	<p style="font-size:smaller;">
+          Except where otherwise noted, this work is licensed under<br>
+          <a href="http://creativecommons.org/licenses/by-nc-sa/3.0" target="_blank">http://creativecommons.org/licenses/by-nc-sa/3.0</a>
+        </p>
+      </section>
+
+      <section>
+        <h2>Agenda</h2>
+        <ul>
+          <li>Introduction</li>
+          <li class="fragment fade-in">PEP 20 &mdash; The Zen of Python</li>
+          <li class="fragment fade-in">Adhering to Style: PEP 8</li>
+          <li class="fragment fade-in">Python or Pascal?</li>
+          <li class="fragment fade-in">Python is Object Oriented: Use Classes!
+            <ul class="fragment fade-in" style="font-size: smaller;">
+              <li>What do classess look like?</li>
+              <li>Public, Internal or Private?</li>
+              <li>Special Methods</li>
+              <li>What about modules?</li>
+              <li>Exceptions</li>
+            </ul>
+          </li>
+          <li class="fragment fade-in">Running Scripts</li>
+          <li class="fragment fade-in">Putting It All Together</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Who Am I?</h2>
+        <ul>
+          <li>Currently the CTO of Leaning Forward Technologies</li>
+          <li>Past Jobs: U.S. Air Force, Booz-Allen &amp; Hamilton, Rackspace</li>
+          <li>Using Python for serious projects for 15+ years
+            <ul>
+              <li>Rackspace ERP (CORE) and ticketing (CATS) systems</li>
+              <li><a href="http://nick.borko.org/pse" target="_blank">Python Servlet Engine</a> web framework (EOL)</li>
+              <li>Shareable Content Object Reference Model (SCORM, IEEE 1484.11) Learning Management System (LMS)</li>
+            </ul>
+          </li>
+      </section>
+
+      <section>
+        <h2>PEP 20 &mdash; The Zen of Python</h2>
+        <ul>
+          <li>PEP - Python Enhancement Proposal</li>
+          <li>"Easter Egg" in Python
+        </ul>
+        <pre class="python"><code>Python 2.7.3 (default, Sep 26 2012, 21:53:58) 
+[GCC 4.7.2] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import this
+The Zen of Python, by Tim Peters
+
+Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+Flat is better than nested.
+Sparse is better than dense.
+Readability counts.
+Special cases aren't special enough to break the rules.
+Although practicality beats purity.
+Errors should never pass silently.
+Unless explicitly silenced.
+In the face of ambiguity, refuse the temptation to guess.
+There should be one-- and preferably only one --obvious way to do it.
+Although that way may not be obvious at first unless you're Dutch.
+Now is better than never.
+Although never is often better than *right* now.
+If the implementation is hard to explain, it's a bad idea.
+If the implementation is easy to explain, it may be a good idea.
+Namespaces are one honking great idea -- let's do more of those!
+>>> </code></pre>
+      </section>
+
+      <section>
+        <h2>PEP 20 &mdash; The Zen of Python</h2>
+        <h3>Beautiful is better than ugly.</h3>
+        <pre><code>def evens(number_list):
+    return [ i for i in number_list if i % 2 == 0 ]</code></pre>
+        rather than:
+        <pre><code>evens = lambda n:filter(lambda x:not x%2,n)</code></pre>
+      </section>
+
+      <section>
+        <h2>PEP 20 &mdash; The Zen of Python</h2>
+        <h3>Explicit is better than implicit.</h3>
+        <pre><code>def area_rect(width, height):
+    return width * height</pre></code>
+        rather than:
+        <pre><code>from operator import *
+
+def area_rect(*arg):
+    return reduce(mul, arg[0:1])</pre></code>
+      </section>
+
+      <section>
+        <h2>PEP 20 &mdash; The Zen of Python</h2>
+        <h3>Simple is better than complex.</h3>
+        <pre><code>import json
+
+def pretty_print_dict(d):
+    print(json.dumps(d, sort_keys=True, indent=4))</code></pre>
+        rather than:
+        <pre><code>import sys
+
+def pretty_print_dict(d, indent=0):
+    for key in sorted(d.keys()):
+      sys.stdout.write(' ' % indent)
+      sys.stdout.write('%s: ' % key)
+      if isinstance(d[key], dict):
+          pretty_print_dict(d[key], indent + 4)
+      else:
+          sys.stdout.write(str(d[key]) + '\n')</code></pre>
+      </section>
+
+      <section>
+        <h2>PEP 20 &mdash; The Zen of Python</h2>
+        <h3>Complex is better than complicated.</h3>
+        <pre><code>def dispatch_request(request, param1=None, param2=None):
+    if request == 'COMMAND1':
+        return comand1()
+    elif request == 'COMMAND2':
+        return command2(param1)
+    elif request == 'COMMAND3':
+        return command3(param1, param2)</code></pre>
+        rather than:
+        <pre><code>def dispatch_request(request, *arg):
+    return {'COMMAND1':command1, 'COMMAND2':command2, 'COMMAND3':command3}[request](*arg)</code></pre>
+      </section>
+
+      <section>
+        <h2>PEP 20 &mdash; The Zen of Python</h2>
+        <h3>Flat is better than nested.</h3>
+        <pre><code>def type_of_number(number):
+    result = []
+    if number == 0:
+        return 'ZERO'
+    if number > 0:
+        result.append('POSITIVE')
+    else:
+        result.append('NEGATIVE')
+    if number % 2:
+        result.append('ODD')
+    else:
+        result.append('EVEN');
+    return ' '.join(result)</code></pre>
+    rather than:
+        <pre><code>def type_of_number(number):
+    if number > 0:
+        if number % 2:
+            return 'POSITIVE ODD'
+        else:
+            return 'POSITIVE EVEN'
+    elif number < 0:
+        if number % 2:
+            return 'NEGATIVE ODD'
+        else:
+            return 'NEGATIVE EVEN'
+    else:
+        return 'ZERO'</code></pre>
+      </section>
+
+      <section>
+        <h2>PEP 20 &mdash; The Zen of Python</h2>
+        <h3>Sparse is better than dense.</h3>
+        <pre><code>def factorial(number):
+    if number < 1:
+      raise ValueError(number)
+    elif number &gt 1:
+      return factorial(number - 1) * number
+    else:
+      return number</code></pre>
+        rather than:
+        <pre><code>def factorial(number):
+    if number&lt;1:raise ValueError(number)
+    else:return factorial(number-1)*number if number&gt;1 else number</code></pre>
+      </section>
+
+      <section>
+        <h2>PEP 20 &mdash; The Zen of Python</h2>
+        <h3>Readability counts.</h3>
+        <pre><code>def full_name(first_name, last_name):
+    return ' '.join([first_name, last_name])</code></pre>
+        rather than:
+        <pre><code>def fln(fn, ln):
+    return '%(fn)s %(ln)s' % locals()</code></pre>
+      </section>
+
+      <section>
+        <h2>PEP 20 &mdash; The Zen of Python</h2>
+        <h3>Special cases aren't special enough to break the rules.<br>
+          Although practicality beats purity.</h3>
+        <pre><code>sort(people, lambda person1, person2: cmp(person1.name, person2.name))</code></pre>
+        rather than:
+        <pre><code>def person_comparator(person1, person2):
+    if person1.name &lt; person2.name:
+        return -1
+    elif person1.name &gt; person2.name:
+        return 1
+    else:
+        return 0
+
+sort(people, person_comparator)</code></pre>
+      </section>
+
+      <section>
+        <h2>PEP 20 &mdash; The Zen of Python</h2>
+        <h3>Errors should never pass silently.<br>
+          Unless explicitly silenced.</h3>
+        <pre><code>def list_operation(l):
+  if len(l) == 0:
+      raise ValueError
+  else:
+    <i>...do some operation, possibly returning an empty list...</i>
+
+try:
+  result = list_operation(my_list)
+except ValueError:
+  # it's alright if the list is empty...
+  result = []</code></pre>
+        rather than:
+        <pre><code>def list_operation(l):
+  if len(l) == 0:
+      return []
+  else:
+    <i>...do some operation, possibly returning an empty list...</i>
+
+result = list_operation(my_list)</code></pre>
+      </section>
+
+      <section>
+        <h2>PEP 20 &mdash; The Zen of Python</h2>
+        <h3>In the face of ambiguity, refuse the temptation to guess.</h3>
+        <pre><code class="python">if (a &amp; (1&lt;&lt;3)) or (a &amp; (1&lt;&lt;5)):</code></pre>
+        rather than:
+        <pre><code class="python">if a &amp; 1&lt;&lt;3 or a &amp 1&lt;&lt;5:</code></pre>
+        (although both are equivalent in Python, operator precedence differs in C)
+      </section>
+
+      <section>
+        <h2>PEP 20 &mdash; The Zen of Python</h2>
+        <h3>There should be one-- and preferably only one --obvious way to do it.<br>
+          Although that way may not be obvious at first unless you're Dutch.</h3>
+        <ul>
+          <li>As in perl, there is always more than one way to do it</li>
+          <li>Be mindful of Python's capabilities:
+            <ul>
+              <li>less used builtins (cmp, enumerate, min and max for iterables)</li>
+              <li>functional constructs (list comprehensions, generators, iterators)</li>
+              <li>special language features (decorators,metaclasses)></li>
+            </ul>
+          </li>
+          <li>While it might not be obvious at first that your problem can be
+            solved by a simple one-liner, consider that there might be an
+            easier, Pythonic way of doing it</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>PEP 20 &mdash; The Zen of Python</h2>
+        <h3>Now is better than never.<br>
+          Although never is often better than *right* now.</h3>
+        <pre><code>with open('input.txt') as f:
+    line = f.readline().strip()
+    assert line != "" # no empty lines!</code></pre>
+        rather than:
+        <pre><code>f = open('input.txt')
+f = readline().strip()
+assert line != "" # no empty lines!</code></pre>
+      </section>
+
+      <section>
+        <h2>PEP 20 &mdash; The Zen of Python</h2>
+        <h3>If the implementation is hard to explain, it's a bad idea.<br>
+          If the implementation is easy to explain, it may be a good idea.</h3>
+        <pre><code>def dispatch_request(request, param1=None, param2=None):
+    if request == 'COMMAND1':
+        return comand1()
+    elif request == 'COMMAND2':
+        return command2(param1)
+    elif request == 'COMMAND3':
+        return command3(param1, param2)</code></pre>
+        rather than:
+        <pre><code>def dispatch_request(request, *arg):
+    return {'COMMAND1':command1, 'COMMAND2':command2, 'COMMAND3':command3}[request](*arg)</code></pre>
+      </section>
+
+      <section>
+        <h2>PEP 20 &mdash; The Zen of Python</h2>
+        <h3>Namespaces are one honking great idea -- let's do more of those!</h3>
+        <pre><code>import sys
+...
+sys.exit(0)</code></pre>
+        rather than:
+        <pre><code>from sys import exit
+...
+exit(0)</code></pre>
+        and <i>never</i>:
+        <pre><code>from sys import *</code></pre>
+      </section>
+
+      <section>
+        <h2>Adhering to Style: PEP 8</h2>
+        <ul>
+          <li>PEP 8 (Style Guide for Python Code) was adapted from Guido van Rossum's
+            Python Style Guide essay (also see PEP 257, Docstring Conventions)</li>
+          <li>Intended to improve code readability: "Readability counts."</li>
+          <li>Consistency is more important than strict adherance to PEP 8</li>
+          <li>Knowing when <i>not</i> to follow style guidelines is just as important:
+            <ul>
+              <li>Strict PEP 8 style would make your code less readable</li>
+              <li>Company/Organizational style may break PEP 8 rules</li>
+              <li>Surrounding code uses a different style</li>
+            </ul>
+          </li>
+      </section>
+
+      <section>
+        <h2>Python or Pascal?</h2>
+        <ul>
+          <li>Pascal is an imperative (and procedural) programming language
+            <ul>
+              <li>Designed to teach structured analysis and programming</li>
+              <li>The basic component is the PROCEDURE (or FUNCTION)</li>
+              <li>Programs are sequences of compoents</li>
+            </ul>
+          <li>Example program:
+            <pre class="pascal"><code>program Fibonacci;
+
+(* Print a Fibonacci series up to n *)
+procedure fib(n:integer);
+    var a,b,temp:integer;
+begin
+    a := 0;
+    b := 1;
+    while b < n do
+    begin
+        writeln(b);
+        temp := a;
+        a := b;
+        b := b + temp;
+    end;
+end;
+
+begin
+  (* print the fibonacci sequence up to 2000 *)
+  fib(2000);
+end.</code></pre>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Python or Pascal?</h2>
+        <ul>
+          <li>Python is an object oriented (mostly) programming language
+            <ul>
+              <li>Python is also a structured language (blocks, conditionals, loops, etc.)</li>
+              <li>The basic component is the <b>object</b></li>
+              <li>Programs are statements that maniuplate objects</li>
+            </ul>
+          </li>
+          <li>Unfortunately, most Python tutorials and examples teach procedural
+            programming rather than object oriented programming.</li>
+          <li>Example program (from the Python manual):
+            <pre><code>def fib(n):
+    """Print a Fibonacci series up to n."""
+    a, b = 0, 1
+    while b < n:
+        print(b)
+        a, b = b, a+b
+ 
+# print the fibonacci sequence up to 2000
+fib(2000)</code></pre>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Python is Object Oriented</h2>
+        <h3>Use Classes!</h3>
+        <ul>
+          <li>Python is built on objects:
+            <ul>
+              <li>The number <code>5</code> is an object</li>
+              <li>The string <code>"Hello, world"</code> is an object</li>
+              <li>The type <code>int</code> is an object</li>
+              <li>A function defined with <code>def</code> is an object</li>
+            </ul>
+          </li>
+          <li>If you're not programming with classes, you're programming with globals!</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Python is Object Oriented</h2>
+        <h3>What do classes look like?</h3>
+        A classic example:
+        <pre><code>class Point(object):
+    """Point class for tracking points on a 2d graph."""
+
+    def __init__(self, x=0, y=0):
+        """
+        Constructor arguments:
+        x: The x coordinate of the point (default: 0)
+        y: The y coordinate of the point (default: 0)
+        """
+        self._x = x
+        self._y = y
+
+    def __str__(self):
+        """Return the string representation of the point as (x, y)"""
+        return '(%d, %d)' % (self._x, self._y)
+
+    def distance_from_origin(self):
+        """Calculate the distance from the origin (0, 0) to the point"""
+        return ((self._x ** 2) + (self._y ** 2)) ** 0.5</code></pre>
+      </section>
+
+      <section>
+        <h2>Python is Object Oriented</h2>
+        <h3>Public, Internal or Private?</h3>
+        <ul>
+          <li>Python has no notion of member visibility &mdash; all class members are public</li>
+          <li>By convention, variables prefixed with a single underscore (_) are "internal"</li>
+          <li>By convention, variables prefixed with double underscore (__) are "private" (and mangled)</li>
+          <li>Use these conventions when writing your classes so others will understand your intentions</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Python is Object Oriented</h2>
+        <h3>Special Methods</h3>
+        <ul>
+          <li>Pythonic implementation of "operator overloading"</li>
+          <li>Special method names start and end with double underscores (__)</li>
+          <li><b>Do not</b> use this convention for any of your own variables/methods</li>
+          <li>Examples:
+            <ul>
+              <li>__init__ &ndash; Constructor</li>
+              <li>__del__ &ndash; Destructor</li>
+              <li>__str__ &ndash; Return a string representation (e.g. via <code>str()</code>)</li>
+              <li>__getattr__ &ndash; Called when looking up an attribute value on the object</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Python is Object Oriented</h2>
+        <h3>What about modules?</h3>
+        <p>
+          Modules are a kind of encapsulation for structural organization:
+        </p>
+        <ul>
+          <li>A module is an executable block of code &mdash; file = module</li>
+          <li>Modules define common classes/functions/constants as a single object</li>
+          <li>All objects defined or imported into a module are "global" to the module</li>
+          <li>Statements are executed when the module is imported (or when used as a script)</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Python is Object Oriented</h2>
+        <h3>What about modules?</h3>
+        <p>
+          Why shouldn't you rely on modules for data encapsulation:
+        </p>
+        <ul>
+          <li>Code is executed <i>only once</i>: the first time the module is imported</li>
+          <li>Modules are singleton objects &mdash; change any module data, you change it everywhere</li>
+          <li>Testing, mocking and other frameworks are more difficult to implement for modules than classes</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Python is Object Oriented</h2>
+        <h3>Exceptions</h3>
+        <p>
+          There are some notable exception when writing modules is better than writing classes:
+        </p>
+        <ul>
+          <li>Writing a library of utility functions</li>
+          <li>Quick scripts for one-and-done jobs (e.g. system administration)</li>
+          <li>Using most web frameworks that rely on global state information:
+            <ul>
+              <li>Request and response objects (among others) are often globals</li>
+              <li>Routing (OOTB) doesn't understand how to route methods</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Python is Object Oriented</h2>
+        <p>
+          How do you know if you should be using classes?  Look for the following signs:
+        </p>
+        <ul>
+          <li>Making use of global data</li>
+          <li>Repeated passing of data to module functions</li>
+          <li>Managing your own state information for common data structures</li>
+          <li>Using copies of modules to avoid tainting internal variables</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Running Scripts</h2>
+        <ul>
+          <li>Executing a Python script will execute all code in the global scope</li>
+          <li>Importing a script/module will also execute all code in the global (module) scope</li>
+          <li>Use the following idiom to make your code importable, but also executable:
+            <pre><code>if __name__ == '__main__':
+    <i>...your executable code...</i></code></pre>
+            (at the bottom of the module)
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Putting It All Together</h2>
+        <h3>Hangman Example</h3>
+        <b>Script example</b><br>
+        <a>Link</a><br><br>
+        <b>Module based example</b><br>
+        <a>Link</a><br><br>
+        <b>Class based example</b><br>
+        <a>Link</a>
+      </section>
+
+      <section>
+        <p>"import this" &copy; 2013 by Nicholas Borko</p>
+        <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="images/by-nc-sa.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>
+      </section>
+
+    </div>
+
+    <div class="footer">
+      <a href="http://creativecommons.org/licenses/by-nc-sa/3.0" target="_blank" style="z-index:999;"><img src="images/by-nc-sa.png" border="0" height="50" style="position:fixed;left:25px;" title="BY-NC-SA" alt="Creative Commons Logo for BY-NC-SA"></a>
+      <b>"import this"</b><br>
+      Presented by Nick Borko
+    </div>
+
+  </div>
+
+  <script src="lib/js/head.min.js"></script>
+  <script src="js/reveal.min.js"></script>
+
+  <script>
+    Reveal.initialize({
+      width: '90%',
+      height: '90%',
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+      transition: 'page', // default/cube/page/concave/zoom/linear/fade/none
+      dependencies: [
+        { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+        { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad() } },
+        { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+        { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+      ]
+    });
+  </script>
+
+</body>
+</html>
